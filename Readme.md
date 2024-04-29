@@ -1,7 +1,7 @@
 # Проект «Большое путешествие»
 
 * Студент: [Артур Ибрагимов](https://up.htmlacademy.ru/ecmascript/23/user/2101513).
-* Наставник: `Неизвестно`.
+* Наставник: [Юлия Волкова](https://htmlacademy.ru/profile/julie_volkova).
 
 ---
 
