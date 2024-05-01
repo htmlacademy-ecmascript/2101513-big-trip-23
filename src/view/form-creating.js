@@ -1,103 +1,23 @@
+import EventTypes from './event-types.js';
+import EventOffers from './event-offers.js';
+import EventDestinationControl from './event-destination-control.js';
+import EventDestination from './event-destination';
+
 import {createElement} from '../render.js';
 import {
-  EVENT_TYPES,
-  DESTINATION_POINTS,
-  OFFERS_OPTIONS,
-  DESTINATION_DESCRIPTION_PROPERTIES
-} from '../constants.js';
-import {getWordWithCapitalLetter} from '../utils.js';
-
-const getEventsItemTemplate = ({value, isChecked}) => `
-  <div class="event__type-item">
-    <input id="event-type-${value}-1"
-           class="event__type-input  visually-hidden"
-           value="${value}"
-           type="radio"
-           name="event-type"
-           ${isChecked ? 'checked' : ''}
-    >
-    <label class="event__type-label  event__type-label--${value}" for="event-type-${value}-1">${getWordWithCapitalLetter(value)}</label>
-  </div>
-`;
-
-const getEventsTemplate = () => `
-  <div class="event__type-wrapper">
-    <label class="event__type  event__type-btn" for="event-type-toggle-1">
-    <span class="visually-hidden">Choose event type</span>
-    <img class="event__type-icon" width="17" height="17" src="img/icons/flight.png" alt="Event type icon">
-    </label>
-    <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
-
-    <div class="event__type-list">
-      <fieldset class="event__type-group">
-      <legend class="visually-hidden">Event type</legend>
-
-      ${EVENT_TYPES.map((type) => getEventsItemTemplate(type)).join('')}
-
-      </fieldset>
-    </div>
-  </div>
-`;
-
-const getDestinationItemTemplate = (point) => `
-    <option value="${point}"></option>
-`;
-
-const getDestinationTemplate = () => `
-  <div class="event__field-group  event__field-group--destination">
-    <label class="event__label  event__type-output" for="event-destination-1">
-      Flight
-    </label>
-    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="Geneva" list="destination-list-1">
-    <datalist id="destination-list-1">
-        ${DESTINATION_POINTS.map((point) => getDestinationItemTemplate(point)).join('')}
-    </datalist>
-  </div>
-`;
-
-const getOffersItemTemplate = ({value, title, price, isChecked}) => `
-  <div class="event__offer-selector">
-    <input id="event-offer-${value}-1"
-           class="event__offer-checkbox  visually-hidden"
-           type="checkbox"
-           name="event-offer-${value}"
-           ${isChecked ? 'checked' : ''}
-    >
-    <label class="event__offer-label" for="event-offer-${value}-1">
-      <span class="event__offer-title">${title}</span>
-      &plus;&euro;&nbsp;
-      <span class="event__offer-price">${price}</span>
-    </label>
-  </div>
-`;
-
-const getOffersTemplate = () => `
-  <div class="event__available-offers">
-
-    ${OFFERS_OPTIONS.map((option) => getOffersItemTemplate(option)).join('')}
-
-  </div>
-`;
-
-const getDestinationDescriptionTemplate = ({description = '', photos = []}) => `
-  <p class="event__destination-description">${description}</p>
-
-  <div class="event__photos-container">
-    <div class="event__photos-tape">
-
-      ${photos.map(({src, alt = 'Event photo'}) => `<img class="event__photo" src="${src}" alt="${alt}">`).join('')}
-    </div>
-  </div>
-`;
+  destinationDescription,
+  destinationGallery,
+  extraServices
+} from '../mocks.js';
 
 const getFormCreatingTemplate = () => `
   <li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
     <header class="event__header">
 
-      ${getEventsTemplate()}
+      ${new EventTypes().getTemplate()}
 
-      ${getDestinationTemplate()}
+      ${new EventDestinationControl().getTemplate()}
 
       <div class="event__field-group  event__field-group--time">
         <label class="visually-hidden" for="event-start-time-1">From</label>
@@ -119,19 +39,11 @@ const getFormCreatingTemplate = () => `
       <button class="event__reset-btn" type="reset">Cancel</button>
     </header>
     <section class="event__details">
-      <section class="event__section  event__section--offers">
-        <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
-        ${getOffersTemplate()}
+        ${new EventOffers().getTemplate(extraServices)}
 
-      </section>
+        ${new EventDestination().getTemplate(destinationDescription, destinationGallery)}
 
-      <section class="event__section  event__section--destination">
-        <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-
-        ${getDestinationDescriptionTemplate(DESTINATION_DESCRIPTION_PROPERTIES)}
-
-      </section>
     </section>
   </form>
   </li>
