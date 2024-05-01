@@ -3,6 +3,7 @@ import Sorting from '../view/sorting.js';
 import RoutePoint from '../view/route-point.js';
 import RoutesList from '../view/routes-list.js';
 import FormCreating from '../view/form-creating.js';
+import FormEditing from '../view/form-editing.js';
 
 import {render} from '../render.js';
 
@@ -32,6 +33,12 @@ export default class GeneralPresenter {
     }
   }
 
+  renderFormEditing() {
+    if (this.contentContainer) {
+      render(new FormEditing(), this.routesListInstance.getElement());
+    }
+  }
+
   renderRoutes() {
     if (this.contentContainer) {
       for (let i = 0; i < 3; i++) {
@@ -40,10 +47,11 @@ export default class GeneralPresenter {
     }
   }
 
-  renderRoutesList() {
+  renderContent() {
     if (this.contentContainer) {
       render(this.routesListInstance, this.contentContainer);
 
+      this.renderFormEditing();
       this.renderFormCreating();
       this.renderRoutes();
     }
@@ -52,6 +60,6 @@ export default class GeneralPresenter {
   init() {
     this.renderFilters();
     this.renderSorting();
-    this.renderRoutesList();
+    this.renderContent();
   }
 }
