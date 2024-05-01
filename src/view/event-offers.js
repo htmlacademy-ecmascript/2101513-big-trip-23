@@ -15,7 +15,7 @@ const getEventOffersItemTemplate = ({value, title, price, isChecked}) => `
     </label>
   </div>
 `;
-const getEventOffersTemplate = (extraServices) => `
+const getEventOffersTemplate = (extraServices = []) => `
     <section class="event__section  event__section--offers">
         <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
@@ -28,10 +28,6 @@ const getEventOffersTemplate = (extraServices) => `
 `;
 
 export default class EventOffers {
-  constructor(extraServices) {
-    this.extraServices = extraServices || [];
-  }
-
   getTemplate(extraServices) {
     return getEventOffersTemplate(extraServices);
   }
