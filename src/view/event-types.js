@@ -1,5 +1,5 @@
-import {EVENT_TYPES} from '../constants.js';
-import {createElement} from '../render.js';
+import {EVENT_TYPES} from '../constants';
+import {createElement} from '../render';
 import {getWordWithCapitalLetter} from '../utils';
 
 const getEventsTypesItemTemplate = ({value, isChecked}) => `

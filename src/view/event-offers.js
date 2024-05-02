@@ -1,4 +1,4 @@
-import {createElement} from '../render.js';
+import {createElement} from '../render';
 
 const getEventOffersItemTemplate = ({value, title, price, isChecked}) => `
   <div class="event__offer-selector">
@@ -15,21 +15,25 @@ const getEventOffersItemTemplate = ({value, title, price, isChecked}) => `
     </label>
   </div>
 `;
-const getEventOffersTemplate = (extraServices = []) => `
+const getEventOffersTemplate = (services) => `
     <section class="event__section  event__section--offers">
         <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
         <div class="event__available-offers">
 
-            ${extraServices.map((service) => getEventOffersItemTemplate(service)).join('')}
+            ${services.map((service) => getEventOffersItemTemplate(service)).join('')}
 
         </div>
   </section>
 `;
 
 export default class EventOffers {
-  getTemplate(extraServices) {
-    return getEventOffersTemplate(extraServices);
+  constructor({services}) {
+    this.services = services || [];
+  }
+
+  getTemplate() {
+    return getEventOffersTemplate(this.services);
   }
 
   getElement() {

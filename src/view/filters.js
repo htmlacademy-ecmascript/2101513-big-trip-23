@@ -1,6 +1,6 @@
-import {createElement} from '../render.js';
-import {FILTER_TYPES} from '../constants.js';
-import {getWordWithCapitalLetter} from '../utils.js';
+import {createElement} from '../render';
+import {FILTER_TYPES} from '../constants';
+import {getWordWithCapitalLetter} from '../utils';
 
 const getFiltersItemTemplate = ({value, isChecked}) => `
     <div class="trip-filters__filter">

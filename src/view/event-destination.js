@@ -1,6 +1,6 @@
-import {createElement} from '../render.js';
+import {createElement} from '../render';
 
-const getEventDestinationTemplate = (description = '', gallery = []) => `
+const getEventDestinationTemplate = (description, gallery) => `
   <section class="event__section  event__section--destination">
     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
     <p class="event__destination-description">${description}</p>
@@ -18,8 +18,13 @@ const getEventDestinationTemplate = (description = '', gallery = []) => `
 `;
 
 export default class EventDestination {
-  getTemplate(description, gallery) {
-    return getEventDestinationTemplate(description, gallery);
+  constructor({description, gallery}) {
+    this.description = description || '';
+    this.gallery = gallery || [];
+  }
+
+  getTemplate() {
+    return getEventDestinationTemplate(this.description, this.gallery);
   }
 
   getElement() {

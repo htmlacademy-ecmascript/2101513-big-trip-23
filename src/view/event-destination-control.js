@@ -1,5 +1,5 @@
-import {DESTINATION_POINTS} from '../constants.js';
-import {createElement} from '../render.js';
+import {DESTINATION_POINTS} from '../constants';
+import {createElement} from '../render';
 
 const getDestinationOptionTemplate = (point) => `
     <option value="${point}">${point}</option>

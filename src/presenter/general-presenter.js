@@ -1,11 +1,11 @@
-import Filters from '../view/filters.js';
-import Sorting from '../view/sorting.js';
-import RoutePoint from '../view/route-point.js';
-import RoutesList from '../view/routes-list.js';
-import FormCreating from '../view/form-creating.js';
-import FormEditing from '../view/form-editing.js';
+import Filters from '../view/filters';
+import Sorting from '../view/sorting';
+import RoutePoint from '../view/route-point';
+import RoutesList from '../view/routes-list';
+import FormCreating from '../view/form-creating';
+import FormEditing from '../view/form-editing';
 
-import {render} from '../render.js';
+import {render} from '../render';
 
 export default class GeneralPresenter {
   routesListInstance = new RoutesList();

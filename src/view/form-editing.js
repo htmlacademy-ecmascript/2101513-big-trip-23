@@ -1,13 +1,13 @@
-import EventTypes from './event-types.js';
-import EventOffers from './event-offers.js';
-import EventDestinationControl from './event-destination-control.js';
+import EventTypes from './event-types';
+import EventOffers from './event-offers';
+import EventDestinationControl from './event-destination-control';
 import EventDestination from './event-destination';
 
-import {createElement} from '../render.js';
+import {createElement} from '../render';
 import {
-  destinationDescription,
-  extraServices
-} from '../mocks.js';
+  destinationDescription as description,
+  extraServices as services
+} from '../mocks';
 
 const getFormEditingTemplate = () => `
   <li class="trip-events__item">
@@ -42,9 +42,9 @@ const getFormEditingTemplate = () => `
       </header>
       <section class="event__details">
 
-        ${new EventOffers().getTemplate(extraServices)}
+        ${new EventOffers({services}).getTemplate()}
 
-        ${new EventDestination().getTemplate(destinationDescription)}
+        ${new EventDestination({description}).getTemplate()}
 
       </section>
     </form>

@@ -1,6 +1,6 @@
-import {createElement} from '../render.js';
-import {SORTING_TYPES} from '../constants.js';
-import {getWordWithCapitalLetter} from '../utils.js';
+import {createElement} from '../render';
+import {SORTING_TYPES} from '../constants';
+import {getWordWithCapitalLetter} from '../utils';
 
 const getSortingItemTemplate = ({value, title, isActive, isChecked}) => `
   <div class="trip-sort__item  trip-sort__item--${value}">
