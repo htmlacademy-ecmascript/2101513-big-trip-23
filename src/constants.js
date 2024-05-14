@@ -39,39 +39,38 @@ const SORTING_TYPES = [
   }
 ];
 
-const EVENT_TYPES = [
-  {
-    value: 'taxi'
-  },
-  {
-    value: 'bus'
-  },
-  {
-    value: 'train'
-  },
-  {
-    value: 'ship'
-  },
-  {
-    value: 'flight',
-    isChecked: true
-  },
-  {
-    value: 'check-in'
-  },
-  {
-    value: 'sightseeing'
-  },
-  {
-    value: 'restaurant'
-  }
-];
+const EVENT_TYPES = [ 'taxi', 'bus', 'train', 'ship', 'flight', 'check-in', 'sightseeing', 'restaurant'];
 
-const DESTINATION_POINTS = ['Amsterdam', 'Geneva'];
+const ErrorMessages = {
+  NO_DATE: 'Не указана нужная дата и(или) формат даты.',
+  NO_DURATION: 'Не указано начало или конец промежутка времени',
+  NO_ARGUMENTS: 'Не переданы необходимые аргументы функции и(или) некоторые из них пустые',
+  NO_ELEMENT: 'Безрезультатно. Функция ничего не вернула'
+};
+
+const DateFormats = {
+  MD: 'MMM DD',
+  DMY_HM: 'DD/MM/YY H:m',
+  HM: 'HH:mm',
+};
+
+const TimeFormats = {
+  HOUR: 3600000,
+  DAY: 86400000,
+};
+
+const DurationFormats = {
+  MINUTES: 'mm[M]',
+  HOURS_MINUTES: 'HH[H] mm[M]',
+  DAYS_HOURS_MINUTES: 'DD[D] HH[H] mm[M]',
+};
 
 export {
   FILTER_TYPES,
   SORTING_TYPES,
   EVENT_TYPES,
-  DESTINATION_POINTS
+  ErrorMessages,
+  DateFormats,
+  TimeFormats,
+  DurationFormats
 };
