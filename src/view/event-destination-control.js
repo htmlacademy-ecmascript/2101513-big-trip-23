@@ -1,27 +1,42 @@
-import {DESTINATION_POINTS} from '../constants';
 import {createElement} from '../render';
+import { handleArguments } from '../utils';
 
-const getDestinationOptionTemplate = (point) => `
-    <option value="${point}">${point}</option>
-`;
+const getDestinationOptionTemplate = (name) => {
+  handleArguments(name);
 
-const getDestinationControlTemplate = () => `
-  <div class="event__field-group  event__field-group--destination">
-    <label class="event__label  event__type-output" for="event-destination-1">
-      Flight
-    </label>
-    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="Geneva" list="destination-list-1">
-    <datalist id="destination-list-1">
+  return `
+    <option value="${name}">${name}</option>
+  `;
+};
 
-        ${DESTINATION_POINTS.map((point) => getDestinationOptionTemplate(point)).join('')}
 
-    </datalist>
-  </div>
-`;
+const getDestinationControlTemplate = (routeName, routeType, destinations) => {
+  handleArguments(routeName, routeType);
+
+  return `
+    <div class="event__field-group  event__field-group--destination">
+      <label class="event__label  event__type-output" for="event-destination-1">
+        ${routeType}
+      </label>
+      <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${routeName}" list="destination-list-1">
+      <datalist id="destination-list-1">
+
+          ${destinations.map(({name}) => getDestinationOptionTemplate(name)).join('')}
+
+      </datalist>
+    </div>
+  `;
+};
 
 export default class EventDestinationControl {
+  constructor({routeName, routeType, destinations}) {
+    this.routeName = routeName || '';
+    this.routeType = routeType || 'Flight';
+    this.destinations = destinations || [];
+  }
+
   getTemplate() {
-    return getDestinationControlTemplate();
+    return getDestinationControlTemplate(this.routeName, this.routeType, this.destinations);
   }
 
   getElement() {
