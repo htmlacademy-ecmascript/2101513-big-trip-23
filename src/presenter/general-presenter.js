@@ -4,15 +4,15 @@ import RoutePoint from '../view/route-point';
 import RoutesList from '../view/routes-list';
 import FormCreating from '../view/form-creating';
 import FormEditing from '../view/form-editing';
-
 import {render} from '../render';
 
 export default class GeneralPresenter {
   routesListInstance = new RoutesList();
 
-  constructor() {
-    this.filtersContainer = document.querySelector('.trip-controls__filters');
-    this.contentContainer = document.querySelector('.trip-events');
+  constructor({ mainContainer, filtersContainer, appModel }) {
+    this.mainContainer = mainContainer || null;
+    this.filtersContainer = filtersContainer || null;
+    this.appModel = appModel || {};
   }
 
   renderFilters() {
@@ -22,42 +22,53 @@ export default class GeneralPresenter {
   }
 
   renderSorting() {
-    if (this.contentContainer) {
-      render(new Sorting(), this.contentContainer);
+    if (this.mainContainer) {
+      render(new Sorting(), this.mainContainer);
     }
   }
 
   renderFormCreating() {
-    if (this.contentContainer) {
+    if (this.mainContainer) {
       render(new FormCreating(), this.routesListInstance.getElement());
     }
   }
 
   renderFormEditing() {
-    if (this.contentContainer) {
-      render(new FormEditing(), this.routesListInstance.getElement());
+    if (this.mainContainer) {
+      render(new FormEditing({
+        route: this.routes[0],
+        destinations: this.destinations,
+        handleGetOffers: this.appModel.getOffersForRoute,
+        handleGetOffersByType: this.appModel.getOffersByType,
+        handleGetDestionation: this.appModel.getDestinationForRoute
+      }), this.routesListInstance.getElement());
     }
   }
 
   renderRoutes() {
-    if (this.contentContainer) {
-      for (let i = 0; i < 3; i++) {
-        render(new RoutePoint(), this.routesListInstance.getElement());
+    if (this.mainContainer) {
+      for (let i = 0; i < this.routes.length; i++) {
+        render(new RoutePoint({
+          route: this.routes[i],
+          handleGetOffers: this.appModel.getOffersForRoute,
+          handleGetDestionation: this.appModel.getDestinationForRoute
+        }), this.routesListInstance.getElement());
       }
     }
   }
 
   renderContent() {
-    if (this.contentContainer) {
-      render(this.routesListInstance, this.contentContainer);
+    if (this.mainContainer) {
+      render(this.routesListInstance, this.mainContainer);
 
       this.renderFormEditing();
-      this.renderFormCreating();
       this.renderRoutes();
     }
   }
 
   init() {
+    this.routes = this.appModel.getRoutes();
+    this.destinations = this.appModel.getDestinations();
     this.renderFilters();
     this.renderSorting();
     this.renderContent();
