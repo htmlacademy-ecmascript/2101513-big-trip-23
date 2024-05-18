@@ -1,23 +1,10 @@
-import EventTypes from './event-types';
-import EventOffers from './event-offers';
-import EventDestinationControl from './event-destination-control';
-import EventDestination from './event-destination';
-
 import {createElement} from '../render';
-import {
-  destinationDescription as description,
-  destinationGallery as gallery,
-  extraServices as services
-} from '../mocks';
 
 const getFormCreatingTemplate = () => `
   <li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
     <header class="event__header">
 
-      ${new EventTypes().getTemplate()}
-
-      ${new EventDestinationControl().getTemplate()}
 
       <div class="event__field-group  event__field-group--time">
         <label class="visually-hidden" for="event-start-time-1">From</label>
@@ -40,9 +27,6 @@ const getFormCreatingTemplate = () => `
     </header>
     <section class="event__details">
 
-        ${new EventOffers({services}).getTemplate()}
-
-        ${new EventDestination({description, gallery}).getTemplate()}
 
     </section>
   </form>
