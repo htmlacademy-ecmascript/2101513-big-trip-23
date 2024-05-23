@@ -6,7 +6,7 @@ import FormEditing from '../view/form-editing';
 import {render, replace} from '../framework/render';
 import {ESC_KEY_NAME} from '../constants';
 
-export default class GeneralPresenter {
+export default class AppPresenter {
   #routes = [];
   #destinations = [];
   #appModel = {};
@@ -105,8 +105,8 @@ export default class GeneralPresenter {
   }
 
   init() {
-    this.#routes = this.#appModel.getRoutes();
-    this.#destinations = this.#appModel.getDestinations();
+    this.#routes = this.#appModel.routes;
+    this.#destinations = this.#appModel.destinations;
 
     this.#renderContent();
   }

@@ -1,29 +1,29 @@
 import {routes as mockRoutes} from '../mock/routes';
-import {destinations as mockDestinations} from '../mock/destinations';
 import {offers as mockOffers} from '../mock/offers';
+import {destinations as mockDestinations} from '../mock/destinations';
 
-export default class GeneralModel {
-  routes = mockRoutes.slice() || [];
-  destinations = mockDestinations.slice() || [];
-  offers = mockOffers.slice() || [];
+export default class AppModel {
+  #routes = [];
+  #offers = [];
+  #destinations = [];
 
-  getRoutes() {
-    if (this.routes) {
-      return this.routes;
-    }
+  get routes() {
+    this.#routes = mockRoutes;
+
+    return this.#routes.slice();
   }
 
-  getDestinations() {
-    if (this.destinations) {
-      return this.destinations;
-    }
+  get offers() {
+    this.#offers = mockOffers;
+
+    return this.#offers.slice();
   }
 
-  getOffers = () => {
-    if (this.offers) {
-      return this.offers;
-    }
-  };
+  get destinations() {
+    this.#destinations = mockDestinations;
+
+    return this.#destinations;
+  }
 
   getOffersByType = (type) => {
     const {offers} = this.offers.find(({type: offerType}) => offerType === type);
