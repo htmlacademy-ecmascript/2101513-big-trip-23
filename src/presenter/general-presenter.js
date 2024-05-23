@@ -37,39 +37,45 @@ export default class GeneralPresenter {
       this.#renderRoute({
         route: this.#routes[i],
         destinations: this.#destinations,
-        handleGetOffers: this.#appModel.getOffersForRoute,
+        handleGetOffersForRoute: this.#appModel.getOffersForRoute,
         handleGetOffersByType: this.#appModel.getOffersByType,
-        handleGetDestination: this.#appModel.getDestinationForRoute
+        handleGetDestinationForRoute: this.#appModel.getDestinationForRoute
       });
     }
   }
 
-  #renderRoute({route, destinations, handleGetOffers, handleGetOffersByType, handleGetDestination}) {
+  #renderRoute({
+    route,
+    destinations,
+    handleGetOffersForRoute,
+    handleGetOffersByType,
+    handleGetDestinationForRoute
+  }) {
     const routePoint = new RoutePoint({
       route,
-      handleGetOffers,
-      handleGetDestination,
+      handleGetOffersForRoute,
+      handleGetDestinationForRoute,
       handleEditClick: onEditClick
     });
 
     const editPoint = new FormEditing({
       route,
       destinations,
-      handleGetOffers,
+      handleGetOffersForRoute,
       handleGetOffersByType,
-      handleGetDestination,
+      handleGetDestinationForRoute,
       handleEditClose: onEditClose,
       handleEditSubmit: onEditClose
     });
 
     function onEditClick() {
       replaceRouteToEdit();
-      document.removeEventListener('keydown', handleEscKeyDown);
+      document.addEventListener('keydown', onEscKeyDown);
     }
 
     function onEditClose() {
       replaceEditToRoute();
-      document.removeEventListener('keydown', handleEscKeyDown);
+      document.addEventListener('keydown', onEscKeyDown);
     }
 
     function replaceRouteToEdit() {
@@ -80,9 +86,10 @@ export default class GeneralPresenter {
       replace(routePoint, editPoint);
     }
 
-    function handleEscKeyDown(evt) {
+    function onEscKeyDown(evt) {
       if (evt.key === ESC_KEY_NAME) {
-        document.removeEventListener('keydown', handleEscKeyDown);
+        replaceEditToRoute();
+        document.removeEventListener('keydown', onEscKeyDown);
       }
     }
 

@@ -5,10 +5,11 @@ import AbstractView from '../framework/view/abstract-view';
 
 const getRoutePointTemplate = (
   route,
-  offers,
-  destination
+  routeOffers,
+  routeDestination
 ) => {
   const {basePrice, dateFrom, dateTo, isFavorite, type} = route;
+  const favoriteButtonActiveClassname = 'event__favorite-btn--active';
 
   return `
   <li class="trip-events__item">
@@ -17,7 +18,7 @@ const getRoutePointTemplate = (
       <div class="event__type">
         <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
       </div>
-      <h3 class="event__title">${type} ${destination}</h3>
+      <h3 class="event__title">${type} ${routeDestination}</h3>
       <div class="event__schedule">
         <p class="event__time">
           <time class="event__start-time" datetime="${dateFrom}">${getHumanizedDate(dateFrom, DateFormats.HM)}</time>
@@ -29,8 +30,8 @@ const getRoutePointTemplate = (
       <p class="event__price">
         &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
       </p>
-       ${new RoutePointOffers({routeOffers: offers}).template}
-      <button class="event__favorite-btn ${isFavorite ? 'event__favorite-btn--active' : ''}" type="button">
+       ${new RoutePointOffers({routeOffers}).template}
+      <button class="event__favorite-btn ${isFavorite ? favoriteButtonActiveClassname : ''}" type="button">
         <span class="visually-hidden">Add to favorite</span>
         <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
           <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
@@ -48,16 +49,16 @@ export default class RoutePoint extends AbstractView {
   #route = {};
   #routeOffers = [];
   #routeDestination = '';
-  #handleGetOffers = null;
-  #handleGetDestination = null;
+  #handleGetOffersForRoute = null;
+  #handleGetDestinationForRoute = null;
   #handleEditClick = null;
 
-  constructor({route, handleGetOffers, handleGetDestination, handleEditClick}) {
+  constructor({route, handleGetOffersForRoute, handleGetDestinationForRoute, handleEditClick}) {
     super();
 
     this.#route = route;
-    this.#handleGetOffers = handleGetOffers;
-    this.#handleGetDestination = handleGetDestination;
+    this.#handleGetOffersForRoute = handleGetOffersForRoute;
+    this.#handleGetDestinationForRoute = handleGetDestinationForRoute;
     this.#handleEditClick = handleEditClick;
 
     this.#handleEventListeners();
@@ -66,22 +67,22 @@ export default class RoutePoint extends AbstractView {
   get template() {
     return getRoutePointTemplate(
       this.#route,
-      this.offers,
-      this.destination,
+      this.routeOffers,
+      this.routeDestination,
     );
   }
 
-  get offers() {
+  get routeOffers() {
     const {type, offers} = this.#route;
 
-    this.#routeOffers = this.#handleGetOffers(type, offers);
+    this.#routeOffers = this.#handleGetOffersForRoute(type, offers);
 
     return this.#routeOffers;
   }
 
-  get destination() {
+  get routeDestination() {
     const {destination} = this.#route;
-    const {name} = this.#handleGetDestination(destination);
+    const {name} = this.#handleGetDestinationForRoute(destination);
 
     this.#routeDestination = name;
 

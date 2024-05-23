@@ -9,9 +9,9 @@ import AbstractView from '../framework/view/abstract-view';
 const getFormEditingTemplate = (
   route,
   destinations,
-  offers,
+  routeOffers,
   offersByType,
-  destination
+  routeDestination
 ) => {
   const {dateFrom, dateTo, basePrice, type} = route;
 
@@ -22,7 +22,7 @@ const getFormEditingTemplate = (
 
         ${new EventTypes({routeType: type}).template}
 
-        ${new EventDestinationControl({routeName: destination.name, routeType: type, destinations}).template}
+        ${new EventDestinationControl({routeName: routeDestination.name, routeType: type, destinations}).template}
 
         ${new EventDate({dateFrom, dateTo}).template}
 
@@ -36,9 +36,9 @@ const getFormEditingTemplate = (
       </header>
       <section class="event__details">
 
-        ${new EventOffers({routeOffers: offers, offersByType}).template}
+        ${new EventOffers({routeOffers, offersByType}).template}
 
-        ${new EventDestination({routeDestination: destination}).template}
+        ${new EventDestination({routeDestination}).template}
 
       </section>
     </form>
@@ -52,29 +52,30 @@ export default class FormEditing extends AbstractView {
   #routeOffersByType = [];
   #routeDestination = {};
   #destinations = [];
-  #handleGetOffers = null;
+  #handleGetOffersForRoute = null;
   #handleGetOffersByType = null;
-  #handleGetDestination = null;
-  #handleEditSubmit = null;
+  #handleGetDestinationForRoute = null;
   #handleEditClose = null;
+  #handleEditSubmit = null;
+
   constructor({
     route,
     destinations,
-    handleGetOffers,
+    handleGetOffersForRoute,
     handleGetOffersByType,
-    handleGetDestination,
-    handleEditSubmit,
-    handleEditClose
+    handleGetDestinationForRoute,
+    handleEditClose,
+    handleEditSubmit
   }) {
     super();
 
     this.#route = route;
     this.#destinations = destinations;
-    this.#handleGetOffers = handleGetOffers;
+    this.#handleGetOffersForRoute = handleGetOffersForRoute;
     this.#handleGetOffersByType = handleGetOffersByType;
-    this.#handleGetDestination = handleGetDestination;
-    this.#handleEditSubmit = handleEditSubmit;
+    this.#handleGetDestinationForRoute = handleGetDestinationForRoute;
     this.#handleEditClose = handleEditClose;
+    this.#handleEditSubmit = handleEditSubmit;
 
     this.#handleEventListeners();
   }
@@ -83,16 +84,16 @@ export default class FormEditing extends AbstractView {
     return getFormEditingTemplate(
       this.#route,
       this.#destinations,
-      this.offers,
+      this.routeOffers,
       this.offersByType,
-      this.destination
+      this.routeDestination
     );
   }
 
-  get offers() {
+  get routeOffers() {
     const {type, offers} = this.#route;
 
-    this.#routeOffers = this.#handleGetOffers(type, offers);
+    this.#routeOffers = this.#handleGetOffersForRoute(type, offers);
 
     return this.#routeOffers;
   }
@@ -105,21 +106,21 @@ export default class FormEditing extends AbstractView {
     return this.#routeOffersByType;
   }
 
-  get destination() {
+  get routeDestination() {
     const {destination} = this.#route;
 
-    this.#routeDestination = this.#handleGetDestination(destination);
+    this.#routeDestination = this.#handleGetDestinationForRoute(destination);
 
     return this.#routeDestination;
   }
 
+  #onEditClose = () => {
+    this.#handleEditClose();
+  };
+
   #onEditSubmit = (evt) => {
     evt.preventDefault();
     this.#handleEditSubmit();
-  };
-
-  #onEditClose = () => {
-    this.#handleEditClose();
   };
 
   #handleEventListeners() {
