@@ -1,8 +1,6 @@
-import {createElement} from '../render';
-import { handleArguments } from '../utils';
+import AbstractView from '../framework/view/abstract-view';
 
 const getEventDestinationTemplate = (routeDestination) => {
-  handleArguments(routeDestination);
   const {description, pictures} = routeDestination;
 
   return `
@@ -23,23 +21,14 @@ const getEventDestinationTemplate = (routeDestination) => {
   `;
 };
 
-export default class EventDestination {
+export default class EventDestination extends AbstractView{
+  #routeDestination = {};
   constructor({routeDestination}) {
-    this.routeDestination = routeDestination || {};
+    super();
+    this.#routeDestination = routeDestination;
   }
 
-  getTemplate() {
-    return getEventDestinationTemplate(this.routeDestination);
-  }
-
-  getElement() {
-    if (!this.elem) {
-      this.elem = createElement(this.getTemplate());
-    }
-    return this.elem;
-  }
-
-  removeElement() {
-    this.elem = null;
+  get template() {
+    return getEventDestinationTemplate(this.#routeDestination);
   }
 }

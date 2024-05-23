@@ -1,8 +1,6 @@
-import {createElement} from '../render';
-import { handleArguments } from '../utils';
+import AbstractView from '../framework/view/abstract-view';
 
 const getEventOffersItemTemplate = (offerByType, routeOffers) => {
-  handleArguments(offerByType, routeOffers);
   const {id, title, price} = offerByType;
   const isContainOffer = routeOffers.find(({id: routeOfferId}) => id === routeOfferId);
 
@@ -23,10 +21,7 @@ const getEventOffersItemTemplate = (offerByType, routeOffers) => {
   `;
 };
 
-const getEventOffersTemplate = (routeOffers, offersByType) => {
-  handleArguments(routeOffers, offersByType);
-
-  return `
+const getEventOffersTemplate = (routeOffers, offersByType) => `
     <section class="event__section  event__section--offers">
         <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
@@ -37,27 +32,19 @@ const getEventOffersTemplate = (routeOffers, offersByType) => {
         </div>
     </section>
   `;
-};
 
 
-export default class EventOffers {
+export default class EventOffers extends AbstractView {
+  #routeOffers = [];
+  #offersByType = [];
+
   constructor({routeOffers, offersByType}) {
-    this.routeOffers = routeOffers || [];
-    this.offersByType = offersByType || [];
+    super();
+    this.#routeOffers = routeOffers;
+    this.#offersByType = offersByType;
   }
 
-  getTemplate() {
-    return getEventOffersTemplate(this.routeOffers, this.offersByType);
-  }
-
-  getElement() {
-    if (!this.elem) {
-      this.elem = createElement(this.getTemplate());
-    }
-    return this.elem;
-  }
-
-  removeElement() {
-    this.elem = null;
+  get template() {
+    return getEventOffersTemplate(this.#routeOffers, this.#offersByType);
   }
 }

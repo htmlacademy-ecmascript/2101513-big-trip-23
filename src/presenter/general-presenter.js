@@ -2,75 +2,105 @@ import Filters from '../view/filters';
 import Sorting from '../view/sorting';
 import RoutePoint from '../view/route-point';
 import RoutesList from '../view/routes-list';
-import FormCreating from '../view/form-creating';
 import FormEditing from '../view/form-editing';
-import {render} from '../render';
+import {render, replace} from '../framework/render';
+import {ESC_KEY_NAME} from '../constants';
 
 export default class GeneralPresenter {
-  routesListInstance = new RoutesList();
+  #routes = [];
+  #destinations = [];
+  #appModel = {};
+  #routesListElement = new RoutesList();
 
-  constructor({ mainContainer, filtersContainer, appModel }) {
-    this.mainContainer = mainContainer || null;
-    this.filtersContainer = filtersContainer || null;
-    this.appModel = appModel || {};
+  constructor({mainElement, filtersElement, appModel}) {
+    this.mainElement = mainElement || null;
+    this.filtersElement = filtersElement || null;
+    this.#appModel = appModel;
   }
 
-  renderFilters() {
-    if (this.filtersContainer) {
-      render(new Filters(), this.filtersContainer);
+  #renderFilters() {
+    if (this.filtersElement) {
+      render(new Filters(), this.filtersElement);
     }
   }
 
-  renderSorting() {
-    if (this.mainContainer) {
-      render(new Sorting(), this.mainContainer);
+  #renderSorting() {
+    if (this.mainElement) {
+      render(new Sorting(), this.mainElement);
     }
   }
 
-  renderFormCreating() {
-    if (this.mainContainer) {
-      render(new FormCreating(), this.routesListInstance.getElement());
+  #renderRoutes() {
+    render(this.#routesListElement, this.mainElement);
+
+    for (let i = 0; i < this.#routes.length; i++) {
+      this.#renderRoute({
+        route: this.#routes[i],
+        destinations: this.#destinations,
+        handleGetOffers: this.#appModel.getOffersForRoute,
+        handleGetOffersByType: this.#appModel.getOffersByType,
+        handleGetDestination: this.#appModel.getDestinationForRoute
+      });
     }
   }
 
-  renderFormEditing() {
-    if (this.mainContainer) {
-      render(new FormEditing({
-        route: this.routes[0],
-        destinations: this.destinations,
-        handleGetOffers: this.appModel.getOffersForRoute,
-        handleGetOffersByType: this.appModel.getOffersByType,
-        handleGetDestionation: this.appModel.getDestinationForRoute
-      }), this.routesListInstance.getElement());
-    }
-  }
+  #renderRoute({route, destinations, handleGetOffers, handleGetOffersByType, handleGetDestination}) {
+    const routePoint = new RoutePoint({
+      route,
+      handleGetOffers,
+      handleGetDestination,
+      handleEditClick: onEditClick
+    });
 
-  renderRoutes() {
-    if (this.mainContainer) {
-      for (let i = 0; i < this.routes.length; i++) {
-        render(new RoutePoint({
-          route: this.routes[i],
-          handleGetOffers: this.appModel.getOffersForRoute,
-          handleGetDestionation: this.appModel.getDestinationForRoute
-        }), this.routesListInstance.getElement());
+    const editPoint = new FormEditing({
+      route,
+      destinations,
+      handleGetOffers,
+      handleGetOffersByType,
+      handleGetDestination,
+      handleEditClose: onEditClose,
+      handleEditSubmit: onEditClose
+    });
+
+    function onEditClick() {
+      replaceRouteToEdit();
+      document.removeEventListener('keydown', handleEscKeyDown);
+    }
+
+    function onEditClose() {
+      replaceEditToRoute();
+      document.removeEventListener('keydown', handleEscKeyDown);
+    }
+
+    function replaceRouteToEdit() {
+      replace(editPoint, routePoint);
+    }
+
+    function replaceEditToRoute() {
+      replace(routePoint, editPoint);
+    }
+
+    function handleEscKeyDown(evt) {
+      if (evt.key === ESC_KEY_NAME) {
+        document.removeEventListener('keydown', handleEscKeyDown);
       }
     }
+
+    render(routePoint, this.#routesListElement.element);
   }
 
-  renderContent() {
-    if (this.mainContainer) {
-      render(this.routesListInstance, this.mainContainer);
-
-      this.renderFormEditing();
-      this.renderRoutes();
+  #renderContent() {
+    if (this.mainElement) {
+      this.#renderFilters();
+      this.#renderSorting();
+      this.#renderRoutes();
     }
   }
 
   init() {
-    this.routes = this.appModel.getRoutes();
-    this.destinations = this.appModel.getDestinations();
-    this.renderFilters();
-    this.renderSorting();
-    this.renderContent();
+    this.#routes = this.#appModel.getRoutes();
+    this.#destinations = this.#appModel.getDestinations();
+
+    this.#renderContent();
   }
 }

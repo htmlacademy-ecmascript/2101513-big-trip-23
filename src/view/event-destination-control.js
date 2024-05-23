@@ -1,19 +1,11 @@
-import {createElement} from '../render';
-import { handleArguments } from '../utils';
+import AbstractView from '../framework/view/abstract-view';
 
-const getDestinationOptionTemplate = (name) => {
-  handleArguments(name);
-
-  return `
+const getDestinationOptionTemplate = (name) => `
     <option value="${name}">${name}</option>
   `;
-};
 
 
-const getDestinationControlTemplate = (routeName, routeType, destinations) => {
-  handleArguments(routeName, routeType);
-
-  return `
+const getDestinationControlTemplate = (routeName, routeType, destinations) => `
     <div class="event__field-group  event__field-group--destination">
       <label class="event__label  event__type-output" for="event-destination-1">
         ${routeType}
@@ -26,27 +18,19 @@ const getDestinationControlTemplate = (routeName, routeType, destinations) => {
       </datalist>
     </div>
   `;
-};
 
-export default class EventDestinationControl {
+export default class EventDestinationControl extends AbstractView{
+  #routeName = '';
+  #routeType = '';
+  #destinations = [];
   constructor({routeName, routeType, destinations}) {
-    this.routeName = routeName || '';
-    this.routeType = routeType || 'Flight';
-    this.destinations = destinations || [];
+    super();
+    this.#routeName = routeName;
+    this.#routeType = routeType;
+    this.#destinations = destinations;
   }
 
-  getTemplate() {
-    return getDestinationControlTemplate(this.routeName, this.routeType, this.destinations);
-  }
-
-  getElement() {
-    if (!this.elem) {
-      this.elem = createElement(this.getTemplate());
-    }
-    return this.elem;
-  }
-
-  removeElement() {
-    this.elem = null;
+  get template() {
+    return getDestinationControlTemplate(this.#routeName, this.#routeType, this.#destinations);
   }
 }

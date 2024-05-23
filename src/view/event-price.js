@@ -1,10 +1,6 @@
-import {createElement} from '../render';
-import { handleArguments } from '../utils';
+import AbstractView from '../framework/view/abstract-view';
 
-const getEventPriceTemplate = (routePrice) => {
-  handleArguments(routePrice);
-
-  return `
+const getEventPriceTemplate = (routePrice) => `
     <div class="event__field-group  event__field-group--price">
       <label class="event__label" for="event-price-1">
         <span class="visually-hidden">Price</span>
@@ -13,25 +9,15 @@ const getEventPriceTemplate = (routePrice) => {
       <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${routePrice}">
     </div>
   `;
-};
 
-export default class EventPrice {
+export default class EventPrice extends AbstractView{
+  #routePrice;
   constructor({routePrice}) {
-    this.routePrice = routePrice || 0;
+    super();
+    this.$routePrice = routePrice;
   }
 
-  getTemplate() {
-    return getEventPriceTemplate(this.routePrice);
-  }
-
-  getElement() {
-    if (!this.elem) {
-      this.elem = createElement(this.getTemplate());
-    }
-    return this.elem;
-  }
-
-  removeElement() {
-    this.elem = null;
+  get template() {
+    return getEventPriceTemplate(this.$routePrice);
   }
 }
