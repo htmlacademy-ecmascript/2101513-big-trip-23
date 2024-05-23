@@ -39,13 +39,14 @@ const SORTING_TYPES = [
   }
 ];
 
-const EVENT_TYPES = [ 'taxi', 'bus', 'train', 'ship', 'flight', 'check-in', 'sightseeing', 'restaurant'];
+const EVENT_TYPES = ['taxi', 'bus', 'train', 'ship', 'flight', 'check-in', 'sightseeing', 'restaurant'];
 
 const ErrorMessages = {
   NO_DATE: 'Не указана нужная дата и(или) формат даты.',
   NO_DURATION: 'Не указано начало или конец промежутка времени',
   NO_ARGUMENTS: 'Не переданы необходимые аргументы функции и(или) некоторые из них пустые',
-  NO_ELEMENT: 'Безрезультатно. Функция ничего не вернула'
+  NO_ELEMENT: 'Безрезультатно. Функция ничего не вернула',
+  NO_OFFERS: 'Нет подходящих предложений'
 };
 
 const DateFormats = {
@@ -65,6 +66,8 @@ const DurationFormats = {
   DAYS_HOURS_MINUTES: 'DD[D] HH[H] mm[M]',
 };
 
+const ESC_KEY_NAME = 'Escape';
+
 export {
   FILTER_TYPES,
   SORTING_TYPES,
@@ -72,5 +75,6 @@ export {
   ErrorMessages,
   DateFormats,
   TimeFormats,
-  DurationFormats
+  DurationFormats,
+  ESC_KEY_NAME
 };
