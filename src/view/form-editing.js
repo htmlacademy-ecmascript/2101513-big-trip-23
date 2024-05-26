@@ -9,11 +9,12 @@ import AbstractView from '../framework/view/abstract-view';
 const getFormEditingTemplate = (
   route,
   destinations,
-  offers,
   offersByType,
-  destination
+  routeOffers,
+  routeDestination
 ) => {
   const {dateFrom, dateTo, basePrice, type} = route;
+  const {name} = routeDestination;
 
   return `
   <li class="trip-events__item">
@@ -22,7 +23,7 @@ const getFormEditingTemplate = (
 
         ${new EventTypes({routeType: type}).template}
 
-        ${new EventDestinationControl({routeName: destination.name, routeType: type, destinations}).template}
+        ${new EventDestinationControl({routeName: name, routeType: type, destinations}).template}
 
         ${new EventDate({dateFrom, dateTo}).template}
 
@@ -36,9 +37,9 @@ const getFormEditingTemplate = (
       </header>
       <section class="event__details">
 
-        ${new EventOffers({routeOffers: offers, offersByType}).template}
+        ${new EventOffers({routeOffers, offersByType}).template}
 
-        ${new EventDestination({routeDestination: destination}).template}
+        ${new EventDestination({routeDestination}).template}
 
       </section>
     </form>
@@ -48,33 +49,31 @@ const getFormEditingTemplate = (
 
 export default class FormEditing extends AbstractView {
   #route = {};
-  #routeOffers = [];
-  #routeOffersByType = [];
-  #routeDestination = {};
   #destinations = [];
-  #handleGetOffers = null;
-  #handleGetOffersByType = null;
-  #handleGetDestination = null;
-  #handleEditSubmit = null;
-  #handleEditClose = null;
+  #offersByType = [];
+  #routeOffers = [];
+  #routeDestination = {};
+  #handleFormEditSubmit = null;
+  #handleFormEditClose = null;
+
   constructor({
     route,
     destinations,
-    handleGetOffers,
-    handleGetOffersByType,
-    handleGetDestination,
-    handleEditSubmit,
-    handleEditClose
+    offersByType,
+    routeOffers,
+    routeDestination,
+    onEditSubmit,
+    onEditClose
   }) {
     super();
 
     this.#route = route;
     this.#destinations = destinations;
-    this.#handleGetOffers = handleGetOffers;
-    this.#handleGetOffersByType = handleGetOffersByType;
-    this.#handleGetDestination = handleGetDestination;
-    this.#handleEditSubmit = handleEditSubmit;
-    this.#handleEditClose = handleEditClose;
+    this.#offersByType = offersByType;
+    this.#routeOffers = routeOffers;
+    this.#routeDestination = routeDestination;
+    this.#handleFormEditSubmit = onEditSubmit;
+    this.#handleFormEditClose = onEditClose;
 
     this.#handleEventListeners();
   }
@@ -83,43 +82,15 @@ export default class FormEditing extends AbstractView {
     return getFormEditingTemplate(
       this.#route,
       this.#destinations,
-      this.offers,
-      this.offersByType,
-      this.destination
+      this.#offersByType,
+      this.#routeOffers,
+      this.#routeDestination
     );
   }
 
-  get offers() {
-    const {type, offers} = this.#route;
-
-    this.#routeOffers = this.#handleGetOffers(type, offers);
-
-    return this.#routeOffers;
-  }
-
-  get offersByType() {
-    const {type} = this.#route;
-
-    this.#routeOffersByType = this.#handleGetOffersByType(type);
-
-    return this.#routeOffersByType;
-  }
-
-  get destination() {
-    const {destination} = this.#route;
-
-    this.#routeDestination = this.#handleGetDestination(destination);
-
-    return this.#routeDestination;
-  }
-
-  #onEditSubmit = (evt) => {
+  #closeFormEditingHandler = (evt) => {
     evt.preventDefault();
-    this.#handleEditSubmit();
-  };
-
-  #onEditClose = () => {
-    this.#handleEditClose();
+    this.#handleFormEditClose();
   };
 
   #handleEventListeners() {
@@ -128,7 +99,7 @@ export default class FormEditing extends AbstractView {
       EDIT_FORM_CLOSE_BUTTON: '.event__rollup-btn'
     };
 
-    this.element.querySelector(InteractiveElements.EDIT_FORM).addEventListener('submit', this.#onEditSubmit);
-    this.element.querySelector(InteractiveElements.EDIT_FORM_CLOSE_BUTTON).addEventListener('click', this.#onEditClose);
+    this.element.querySelector(InteractiveElements.EDIT_FORM).addEventListener('submit', this.#closeFormEditingHandler);
+    this.element.querySelector(InteractiveElements.EDIT_FORM_CLOSE_BUTTON).addEventListener('click', this.#closeFormEditingHandler);
   }
 }

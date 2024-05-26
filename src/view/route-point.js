@@ -5,10 +5,11 @@ import AbstractView from '../framework/view/abstract-view';
 
 const getRoutePointTemplate = (
   route,
-  offers,
-  destination
+  routeOffers,
+  routeDestination
 ) => {
   const {basePrice, dateFrom, dateTo, isFavorite, type} = route;
+  const {name} = routeDestination;
 
   return `
   <li class="trip-events__item">
@@ -17,7 +18,7 @@ const getRoutePointTemplate = (
       <div class="event__type">
         <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
       </div>
-      <h3 class="event__title">${type} ${destination}</h3>
+      <h3 class="event__title">${type} ${name}</h3>
       <div class="event__schedule">
         <p class="event__time">
           <time class="event__start-time" datetime="${dateFrom}">${getHumanizedDate(dateFrom, DateFormats.HM)}</time>
@@ -29,7 +30,7 @@ const getRoutePointTemplate = (
       <p class="event__price">
         &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
       </p>
-       ${new RoutePointOffers({routeOffers: offers}).template}
+       ${new RoutePointOffers({routeOffers}).template}
       <button class="event__favorite-btn ${isFavorite ? 'event__favorite-btn--active' : ''}" type="button">
         <span class="visually-hidden">Add to favorite</span>
         <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
@@ -48,49 +49,26 @@ export default class RoutePoint extends AbstractView {
   #route = {};
   #routeOffers = [];
   #routeDestination = '';
-  #handleGetOffers = null;
-  #handleGetDestination = null;
-  #handleEditClick = null;
+  #handleOpenFormEditing = null;
 
-  constructor({route, handleGetOffers, handleGetDestination, handleEditClick}) {
+  constructor({route, routeOffers, routeDestination, onEditClick}) {
     super();
 
     this.#route = route;
-    this.#handleGetOffers = handleGetOffers;
-    this.#handleGetDestination = handleGetDestination;
-    this.#handleEditClick = handleEditClick;
+    this.#routeOffers = routeOffers;
+    this.#routeDestination = routeDestination;
+    this.#handleOpenFormEditing = onEditClick;
 
     this.#handleEventListeners();
   }
 
   get template() {
-    return getRoutePointTemplate(
-      this.#route,
-      this.offers,
-      this.destination,
-    );
+    return getRoutePointTemplate(this.#route, this.#routeOffers, this.#routeDestination);
   }
 
-  get offers() {
-    const {type, offers} = this.#route;
-
-    this.#routeOffers = this.#handleGetOffers(type, offers);
-
-    return this.#routeOffers;
-  }
-
-  get destination() {
-    const {destination} = this.#route;
-    const {name} = this.#handleGetDestination(destination);
-
-    this.#routeDestination = name;
-
-    return this.#routeDestination;
-  }
-
-  #onEditClick = (evt) => {
+  #openFormEditingHandler = (evt) => {
     evt.preventDefault();
-    this.#handleEditClick();
+    this.#handleOpenFormEditing();
   };
 
   #handleEventListeners() {
@@ -98,6 +76,6 @@ export default class RoutePoint extends AbstractView {
       EDIT_FORM: '.event__rollup-btn'
     };
 
-    this.element.querySelector(InteractiveElements.EDIT_FORM).addEventListener('click', this.#onEditClick);
+    this.element.querySelector(InteractiveElements.EDIT_FORM).addEventListener('click', this.#openFormEditingHandler);
   }
 }
