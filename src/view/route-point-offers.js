@@ -1,32 +1,43 @@
-import AbstractView from '../framework/view/abstract-view';
+import { createElement } from '../render';
+import { handleArguments } from '../utils';
 
 const getRoutPointOffersTemplate = (routeOffers) => {
-  if (routeOffers.length) {
+  handleArguments(routeOffers);
+
+  if (routeOffers) {
     return `
     <h4 class="visually-hidden">Offers:</h4>
     <ul class="event__selected-offers">
-      ${routeOffers.map(({title, price}) => `
+      ${
+  routeOffers.map(({title, price}) => `
           <li class="event__offer">
             <span class="event__offer-title">${title}</span>
             &plus;&euro;&nbsp;
             <span class="event__offer-price">${price}</span>
           </li>
-          `).join('')}
+          `).join('')
+}
     </ul>`;
-  } else {
-    return '';
   }
 };
 
-export default class RoutePointOffers extends AbstractView {
-  #routeOffers = [];
-
-  constructor({routeOffers}) {
-    super();
-    this.#routeOffers = routeOffers;
+export default class RoutePointOffers {
+  constructor({ routeOffers }) {
+    this.routeOffers = routeOffers || [];
   }
 
-  get template() {
-    return getRoutPointOffersTemplate(this.#routeOffers);
+  getTemplate() {
+    return getRoutPointOffersTemplate(this.routeOffers);
+  }
+
+  getElement() {
+    if (!this.elem) {
+      this.elem = createElement(this.getTemplate());
+    }
+    return this.elem;
+  }
+
+  removeElement() {
+    this.elem = null;
   }
 }

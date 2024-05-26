@@ -1,6 +1,6 @@
+import {createElement} from '../render';
 import {FILTER_TYPES} from '../constants';
 import {getWordWithCapitalLetter} from '../utils';
-import AbstractView from '../framework/view/abstract-view';
 
 const getFiltersItemTemplate = ({value, isChecked}) => `
     <div class="trip-filters__filter">
@@ -24,8 +24,19 @@ const getFiltersTemplate = () => `
   </form>
 `;
 
-export default class Filters extends AbstractView {
-  get template() {
+export default class Filters {
+  getTemplate() {
     return getFiltersTemplate();
+  }
+
+  getElement() {
+    if (!this.elem) {
+      this.elem = createElement(this.getTemplate());
+    }
+    return this.elem;
+  }
+
+  removeElement() {
+    this.elem = null;
   }
 }

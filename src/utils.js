@@ -5,6 +5,32 @@ dayjs.extend(duration);
 
 const getWordWithCapitalLetter = (word) => `${word.charAt(0).toUpperCase()}${word.slice(1)}`;
 
+const handleError = (errorMessage) => {
+  throw new Error(errorMessage);
+};
+
+const handleArguments = (...args) => {
+  const isArray = (value) => value && Array.isArray(value);
+  const isObject = (value) => value && typeof value === 'object';
+  const isFunction = (value) => value && typeof value === 'function';
+
+  for (const argItem of args) {
+    if (isObject(argItem)) {
+      const isNotEmptyArray = isArray(argItem) && argItem.length;
+      const isNotEmptyFunction = isFunction(argItem) && argItem();
+      const isNotEmptyObject = Object.keys(argItem).length;
+
+      if (isNotEmptyArray || isNotEmptyFunction || isNotEmptyObject) {
+        return;
+      }
+    } else if (argItem) {
+      return;
+    } else {
+      throw new Error(ErrorMessages.NO_ARGUMENTS);
+    }
+  }
+};
+
 const getHumanizedDate = (date, dateFormat) => {
   if (!date || !dateFormat) {
     throw new Error(ErrorMessages.NO_DATE);
@@ -33,6 +59,8 @@ const getDurationGap = (dateFrom, dateTo) => {
 
 export {
   getWordWithCapitalLetter,
+  handleError,
+  handleArguments,
   getHumanizedDate,
   getDurationGap
 };

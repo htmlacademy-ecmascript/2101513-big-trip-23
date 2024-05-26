@@ -1,6 +1,7 @@
-import {routes as mockRoutes} from '../mock/routes';
-import {destinations as mockDestinations} from '../mock/destinations';
-import {offers as mockOffers} from '../mock/offers';
+import { routes as mockRoutes } from '../mock/routes';
+import { destinations as mockDestinations } from '../mock/destinations';
+import { offers as mockOffers } from '../mock/offers';
+import { handleArguments } from '../utils';
 
 export default class GeneralModel {
   routes = mockRoutes.slice() || [];
@@ -19,19 +20,23 @@ export default class GeneralModel {
     }
   }
 
-  getOffers = () => {
+  getOffers() {
     if (this.offers) {
       return this.offers;
     }
-  };
+  }
 
   getOffersByType = (type) => {
+    handleArguments(type);
+
     const {offers} = this.offers.find(({type: offerType}) => offerType === type);
 
     return offers;
   };
 
   getOffersForRoute = (type, routeOffers) => {
+    handleArguments(type, routeOffers);
+
     const offers = this.getOffersByType(type);
 
     if (offers) {
@@ -39,5 +44,9 @@ export default class GeneralModel {
     }
   };
 
-  getDestinationForRoute = (id) => this.destinations.find(({id: destinationId}) => destinationId === id);
+  getDestinationForRoute = (id) => {
+    handleArguments(id);
+
+    return this.destinations.find(({id: destinationId}) => destinationId === id);
+  };
 }

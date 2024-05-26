@@ -4,29 +4,36 @@ import EventDestinationControl from './event-destination-control';
 import EventDestination from './event-destination';
 import EventPrice from './event-price';
 import EventDate from './event-date';
-import AbstractView from '../framework/view/abstract-view';
+
+import {createElement} from '../render';
+import { handleArguments } from '../utils';
 
 const getFormEditingTemplate = (
   route,
   destinations,
-  offers,
-  offersByType,
-  destination
+  handleGetOffers,
+  handleGetOffersByType,
+  handleGetDestination
 ) => {
-  const {dateFrom, dateTo, basePrice, type} = route;
+  handleArguments(route, handleGetOffers, handleGetOffersByType, handleGetDestination);
+
+  const {dateFrom, dateTo, basePrice, type, destination, offers} = route;
+  const routeOffers = handleGetOffers(type, offers);
+  const offersByType = handleGetOffersByType(type);
+  const routeDestination = handleGetDestination(destination);
 
   return `
   <li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
       <header class="event__header">
 
-        ${new EventTypes({routeType: type}).template}
+        ${new EventTypes({routeType: type}).getTemplate()}
 
-        ${new EventDestinationControl({routeName: destination.name, routeType: type, destinations}).template}
+        ${new EventDestinationControl({routeName: routeDestination.name, routeType: type, destinations}).getTemplate()}
 
-        ${new EventDate({dateFrom, dateTo}).template}
+        ${new EventDate({dateFrom, dateTo}).getTemplate()}
 
-        ${new EventPrice({routePrice: basePrice}).template}
+        ${new EventPrice({routePrice: basePrice}).getTemplate()}
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
         <button class="event__reset-btn" type="reset">Delete</button>
@@ -36,9 +43,9 @@ const getFormEditingTemplate = (
       </header>
       <section class="event__details">
 
-        ${new EventOffers({routeOffers: offers, offersByType}).template}
+        ${new EventOffers({routeOffers, offersByType}).getTemplate()}
 
-        ${new EventDestination({routeDestination: destination}).template}
+        ${new EventDestination({routeDestination}).getTemplate()}
 
       </section>
     </form>
@@ -46,89 +53,33 @@ const getFormEditingTemplate = (
 `;
 };
 
-export default class FormEditing extends AbstractView {
-  #route = {};
-  #routeOffers = [];
-  #routeOffersByType = [];
-  #routeDestination = {};
-  #destinations = [];
-  #handleGetOffers = null;
-  #handleGetOffersByType = null;
-  #handleGetDestination = null;
-  #handleEditSubmit = null;
-  #handleEditClose = null;
-  constructor({
-    route,
-    destinations,
-    handleGetOffers,
-    handleGetOffersByType,
-    handleGetDestination,
-    handleEditSubmit,
-    handleEditClose
-  }) {
-    super();
-
-    this.#route = route;
-    this.#destinations = destinations;
-    this.#handleGetOffers = handleGetOffers;
-    this.#handleGetOffersByType = handleGetOffersByType;
-    this.#handleGetDestination = handleGetDestination;
-    this.#handleEditSubmit = handleEditSubmit;
-    this.#handleEditClose = handleEditClose;
-
-    this.#handleEventListeners();
+export default class FormEditing {
+  constructor({ route, destinations, handleGetOffers, handleGetOffersByType, handleGetDestionation }) {
+    this.route = route || {};
+    this.destinations = destinations || [];
+    this.handleGetOffers = handleGetOffers || null;
+    this.handleGetOffersByType = handleGetOffersByType || null;
+    this.handleGetDestionation = handleGetDestionation || null;
   }
 
-  get template() {
+  getTemplate() {
     return getFormEditingTemplate(
-      this.#route,
-      this.#destinations,
-      this.offers,
-      this.offersByType,
-      this.destination
+      this.route,
+      this.destinations,
+      this.handleGetOffers,
+      this.handleGetOffersByType,
+      this.handleGetDestionation
     );
   }
 
-  get offers() {
-    const {type, offers} = this.#route;
-
-    this.#routeOffers = this.#handleGetOffers(type, offers);
-
-    return this.#routeOffers;
+  getElement() {
+    if (!this.elem) {
+      this.elem = createElement(this.getTemplate());
+    }
+    return this.elem;
   }
 
-  get offersByType() {
-    const {type} = this.#route;
-
-    this.#routeOffersByType = this.#handleGetOffersByType(type);
-
-    return this.#routeOffersByType;
-  }
-
-  get destination() {
-    const {destination} = this.#route;
-
-    this.#routeDestination = this.#handleGetDestination(destination);
-
-    return this.#routeDestination;
-  }
-
-  #onEditSubmit = (evt) => {
-    evt.preventDefault();
-    this.#handleEditSubmit();
-  };
-
-  #onEditClose = () => {
-    this.#handleEditClose();
-  };
-
-  #handleEventListeners() {
-    const InteractiveElements = {
-      EDIT_FORM: '.event--edit',
-      EDIT_FORM_CLOSE_BUTTON: '.event__rollup-btn'
-    };
-
-    this.element.querySelector(InteractiveElements.EDIT_FORM).addEventListener('submit', this.#onEditSubmit);
-    this.element.querySelector(InteractiveElements.EDIT_FORM_CLOSE_BUTTON).addEventListener('click', this.#onEditClose);
+  removeElement() {
+    this.elem = null;
   }
 }

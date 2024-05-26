@@ -1,6 +1,6 @@
+import {createElement} from '../render';
 import {SORTING_TYPES} from '../constants';
 import {getWordWithCapitalLetter} from '../utils';
-import AbstractView from '../framework/view/abstract-view';
 
 const getSortingItemTemplate = ({value, title, isActive, isChecked}) => `
   <div class="trip-sort__item  trip-sort__item--${value}">
@@ -24,8 +24,19 @@ const getSortingTemplate = () => `
   </form>
 `;
 
-export default class Sorting extends AbstractView{
-  get template() {
+export default class Sorting {
+  getTemplate() {
     return getSortingTemplate();
+  }
+
+  getElement() {
+    if (!this.elem) {
+      this.elem = createElement(this.getTemplate());
+    }
+    return this.elem;
+  }
+
+  removeElement() {
+    this.elem = null;
   }
 }
