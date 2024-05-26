@@ -1,9 +1,10 @@
-import GeneralPresenter from './presenter/general-presenter';
-import GeneralModel from './model/general-model';
+import AppPresenter from './presenter/app-presenter';
+import AppModel from './model/app-model';
 
 const filtersElement = document.querySelector('.trip-controls__filters');
 const mainElement = document.querySelector('.trip-events');
-const generalModel = new GeneralModel();
 
-const generalPresenter = new GeneralPresenter({mainElement, filtersElement, appModel: generalModel});
-generalPresenter.init();
+const appModel = new AppModel();
+const appPresenter = new AppPresenter({appModel, mainElement, filtersElement});
+
+appPresenter.init();
