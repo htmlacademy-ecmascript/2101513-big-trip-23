@@ -1,4 +1,4 @@
-import {getHumanizedDate} from '../utils';
+import {getHumanizedDate} from '../utils/date';
 import {DateFormats} from '../constants';
 import AbstractView from '../framework/view/abstract-view';
 

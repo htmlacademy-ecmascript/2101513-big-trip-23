@@ -3,13 +3,15 @@ import Sorting from '../view/sorting';
 import RoutesList from '../view/routes-list';
 import RoutePresenter from './route-presenter';
 import {render} from '../framework/render';
+import {updateItems} from '../utils/common';
 
 export default class AppPresenter {
   #appModel = null;
   #mainElement = null;
   #filtersElement = null;
   #routesListElement = new RoutesList();
-  #routes = null;
+  #routes = [];
+  #routePresenters = new Map();
 
   constructor({appModel, mainElement, filtersElement}) {
     this.#appModel = appModel;
@@ -18,7 +20,7 @@ export default class AppPresenter {
   }
 
   init() {
-    this.#routes = this.#appModel.routes;
+    this.#routes = this.#appModel.routes.slice();
 
     this.#renderContent();
   }
@@ -47,12 +49,16 @@ export default class AppPresenter {
 
   #renderRoute(route) {
     if (route) {
+      const {id} = route;
       const routePresenter = new RoutePresenter({
         appModel: this.#appModel,
-        routesListElement: this.#routesListElement.element
+        routesListElement: this.#routesListElement.element,
+        onDataChange: this.#dataChangeHandler,
+        onModeChange: this.#modeChangeHandler
       });
 
       routePresenter.init(route);
+      this.#routePresenters.set(id, routePresenter);
     }
   }
 
@@ -63,4 +69,18 @@ export default class AppPresenter {
       this.#renderRoutes();
     }
   }
+
+  #clearRoutes() {
+    this.#routePresenters.forEach((presenter) => presenter.destroy());
+    this.#routePresenters.clear();
+  }
+
+  #dataChangeHandler = (changedItem) => {
+    const {id: changedItemId} = changedItem;
+
+    this.#routes = updateItems(this.#routes, changedItem);
+    this.#routePresenters.get(changedItemId).init(changedItem);
+  };
+
+  #modeChangeHandler = () => this.#routePresenters.forEach((presenter) => presenter.resetFormEditingView());
 }

@@ -1,4 +1,4 @@
-import {getDurationGap, getHumanizedDate} from '../utils';
+import {getDurationGap, getHumanizedDate} from '../utils/date';
 import {DateFormats} from '../constants';
 import RoutePointOffers from './route-point-offers';
 import AbstractView from '../framework/view/abstract-view';
@@ -49,15 +49,23 @@ export default class RoutePoint extends AbstractView {
   #route = {};
   #routeOffers = [];
   #routeDestination = '';
-  #handleOpenFormEditing = null;
+  #handleEditingFormOpen = null;
+  #handleFavoriteClick = null;
 
-  constructor({route, routeOffers, routeDestination, onEditClick}) {
+  constructor({
+    route,
+    routeOffers,
+    routeDestination,
+    onEditingFormOpen,
+    onFavoriteClick
+  }) {
     super();
 
     this.#route = route;
     this.#routeOffers = routeOffers;
     this.#routeDestination = routeDestination;
-    this.#handleOpenFormEditing = onEditClick;
+    this.#handleEditingFormOpen = onEditingFormOpen;
+    this.#handleFavoriteClick = onFavoriteClick;
 
     this.#handleEventListeners();
   }
@@ -66,16 +74,23 @@ export default class RoutePoint extends AbstractView {
     return getRoutePointTemplate(this.#route, this.#routeOffers, this.#routeDestination);
   }
 
-  #openFormEditingHandler = (evt) => {
+  #formEditingOpenHandler = (evt) => {
     evt.preventDefault();
-    this.#handleOpenFormEditing();
+    this.#handleEditingFormOpen();
+  };
+
+  #favoriteButtonToggleHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFavoriteClick(this.#route);
   };
 
   #handleEventListeners() {
     const InteractiveElements = {
-      EDIT_FORM: '.event__rollup-btn'
+      EDIT_FORM: '.event__rollup-btn',
+      FAVORITE_BUTTON: '.event__favorite-btn'
     };
 
-    this.element.querySelector(InteractiveElements.EDIT_FORM).addEventListener('click', this.#openFormEditingHandler);
+    this.element.querySelector(InteractiveElements.EDIT_FORM).addEventListener('click', this.#formEditingOpenHandler);
+    this.element.querySelector(InteractiveElements.FAVORITE_BUTTON).addEventListener('click', this.#favoriteButtonToggleHandler);
   }
 }
