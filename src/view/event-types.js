@@ -1,5 +1,5 @@
 import {EVENT_TYPES} from '../constants';
-import {getWordWithCapitalLetter} from '../utils/common';
+import {capitalizeLetter} from '../utils/common';
 import AbstractView from '../framework/view/abstract-view';
 
 const getEventsTypesItemTemplate = (eventType, routeType) => `
@@ -11,7 +11,7 @@ const getEventsTypesItemTemplate = (eventType, routeType) => `
           name="event-type"
           ${eventType === routeType ? 'checked' : ''}
     >
-    <label class="event__type-label  event__type-label--${eventType}" for="event-type-${eventType}-1">${getWordWithCapitalLetter(eventType)}</label>
+    <label class="event__type-label  event__type-label--${eventType}" for="event-type-${eventType}-1">${capitalizeLetter(eventType)}</label>
   </div>
 `;
 

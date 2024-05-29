@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import {DurationFormats, ErrorMessages, TimeFormats} from '../constants';
+
 dayjs.extend(duration);
 
 const getHumanizedDate = (date, dateFormat) => {
@@ -29,7 +30,18 @@ const getDurationGap = (dateFrom, dateTo) => {
   }
 };
 
+const getTimeDifference = (route) => {
+  if (!route) {
+    throw new Error(ErrorMessages.INVALID_ARGUMENTS);
+  }
+
+  const {dateFrom, dateTo} = route;
+
+  return dayjs(dateTo).diff(dateFrom);
+};
+
 export {
   getHumanizedDate,
-  getDurationGap
+  getDurationGap,
+  getTimeDifference
 };

@@ -14,41 +14,32 @@ const FILTER_TYPES = [
   }
 ];
 
-const SORTING_TYPES = [
-  {
-    value: 'day',
-    isActive: true,
-    isChecked: true
-  },
-  {
-    value: 'event',
-    isActive: false
-  },
-  {
-    value: 'time',
-    isActive: true
-  },
-  {
-    value: 'price',
-    isActive: true
-  },
-  {
-    value: 'offer',
-    title: 'offers',
-    isActive: false
-  }
-];
+const DISABLED_SORTING_TYPES = ['event', 'offers'];
 
 const EVENT_TYPES = ['taxi', 'bus', 'train', 'ship', 'flight', 'check-in', 'sightseeing', 'restaurant'];
 
 const ESC_KEY_NAME = 'Escape';
 
+const SortingTypes = {
+  DAY: 'day',
+  EVENT: 'event',
+  TIME: 'time',
+  PRICE: 'price',
+  OFFERS: 'offers'
+};
+
+const SortingDirectionVariants = {
+  ASC: 'ASC',
+  DESC: 'DESC'
+};
+
 const ErrorMessages = {
   NO_DATE: 'Не указана нужная дата и(или) формат даты.',
   NO_DURATION: 'Не указано начало или конец промежутка времени',
-  NO_ARGUMENTS: 'Не переданы необходимые аргументы функции и(или) некоторые из них пустые',
+  INVALID_ARGUMENTS: 'Не переданы необходимые аргументы функции и(или) некоторые из них не соответсвуют требованиям',
   NO_ELEMENT: 'Безрезультатно. Функция ничего не вернула',
-  NO_OFFERS: 'Нет подходящих предложений'
+  NO_OFFERS: 'Нет подходящих предложений',
+  INVALID_SORTING_DIRECTION: 'Не валидное значение для варианта сортировки'
 };
 
 const DateFormats = {
@@ -75,9 +66,11 @@ const ModeVariants = {
 
 export {
   FILTER_TYPES,
-  SORTING_TYPES,
+  DISABLED_SORTING_TYPES,
   EVENT_TYPES,
   ESC_KEY_NAME,
+  SortingTypes,
+  SortingDirectionVariants,
   ErrorMessages,
   DateFormats,
   TimeFormats,

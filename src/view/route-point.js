@@ -67,7 +67,7 @@ export default class RoutePoint extends AbstractView {
     this.#handleEditingFormOpen = onEditingFormOpen;
     this.#handleFavoriteClick = onFavoriteClick;
 
-    this.#handleEventListeners();
+    this.#addEventListenersHandler();
   }
 
   get template() {
@@ -84,7 +84,7 @@ export default class RoutePoint extends AbstractView {
     this.#handleFavoriteClick(this.#route);
   };
 
-  #handleEventListeners() {
+  #addEventListenersHandler() {
     const InteractiveElements = {
       EDIT_FORM: '.event__rollup-btn',
       FAVORITE_BUTTON: '.event__favorite-btn'
