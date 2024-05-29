@@ -20,7 +20,6 @@ const getFormEditingTemplate = (
   <li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
       <header class="event__header">
-
         ${new EventTypes({routeType: type}).template}
 
         ${new EventDestinationControl({routeName: name, routeType: type, destinations}).template}
@@ -35,13 +34,13 @@ const getFormEditingTemplate = (
           <span class="visually-hidden">Open event</span>
         </button>
       </header>
-      <section class="event__details">
 
+      <section class="event__details">
         ${new EventOffers({routeOffers, offersByType}).template}
 
         ${new EventDestination({routeDestination}).template}
-
       </section>
+
     </form>
   </li>
 `;
@@ -53,8 +52,8 @@ export default class FormEditing extends AbstractView {
   #offersByType = [];
   #routeOffers = [];
   #routeDestination = {};
-  #handleFormEditSubmit = null;
-  #handleFormEditClose = null;
+  #handleFormEditingSubmit = null;
+  #handleFormEditingClose = null;
 
   constructor({
     route,
@@ -62,8 +61,8 @@ export default class FormEditing extends AbstractView {
     offersByType,
     routeOffers,
     routeDestination,
-    onEditSubmit,
-    onEditClose
+    onFormEditingSubmit,
+    onFormEditingClose
   }) {
     super();
 
@@ -72,8 +71,8 @@ export default class FormEditing extends AbstractView {
     this.#offersByType = offersByType;
     this.#routeOffers = routeOffers;
     this.#routeDestination = routeDestination;
-    this.#handleFormEditSubmit = onEditSubmit;
-    this.#handleFormEditClose = onEditClose;
+    this.#handleFormEditingSubmit = onFormEditingSubmit;
+    this.#handleFormEditingClose = onFormEditingClose;
 
     this.#handleEventListeners();
   }
@@ -88,9 +87,9 @@ export default class FormEditing extends AbstractView {
     );
   }
 
-  #closeFormEditingHandler = (evt) => {
+  #formEditingCloseHandler = (evt) => {
     evt.preventDefault();
-    this.#handleFormEditClose();
+    this.#handleFormEditingClose();
   };
 
   #handleEventListeners() {
@@ -99,7 +98,7 @@ export default class FormEditing extends AbstractView {
       EDIT_FORM_CLOSE_BUTTON: '.event__rollup-btn'
     };
 
-    this.element.querySelector(InteractiveElements.EDIT_FORM).addEventListener('submit', this.#closeFormEditingHandler);
-    this.element.querySelector(InteractiveElements.EDIT_FORM_CLOSE_BUTTON).addEventListener('click', this.#closeFormEditingHandler);
+    this.element.querySelector(InteractiveElements.EDIT_FORM).addEventListener('submit', this.#formEditingCloseHandler);
+    this.element.querySelector(InteractiveElements.EDIT_FORM_CLOSE_BUTTON).addEventListener('click', this.#formEditingCloseHandler);
   }
 }

@@ -41,6 +41,8 @@ const SORTING_TYPES = [
 
 const EVENT_TYPES = ['taxi', 'bus', 'train', 'ship', 'flight', 'check-in', 'sightseeing', 'restaurant'];
 
+const ESC_KEY_NAME = 'Escape';
+
 const ErrorMessages = {
   NO_DATE: 'Не указана нужная дата и(или) формат даты.',
   NO_DURATION: 'Не указано начало или конец промежутка времени',
@@ -66,15 +68,19 @@ const DurationFormats = {
   DAYS_HOURS_MINUTES: 'DD[D] HH[H] mm[M]',
 };
 
-const ESC_KEY_NAME = 'Escape';
+const ModeVariants = {
+  DEFAULT: 'default',
+  EDITING: 'editing'
+};
 
 export {
   FILTER_TYPES,
   SORTING_TYPES,
   EVENT_TYPES,
+  ESC_KEY_NAME,
   ErrorMessages,
   DateFormats,
   TimeFormats,
   DurationFormats,
-  ESC_KEY_NAME
+  ModeVariants
 };
