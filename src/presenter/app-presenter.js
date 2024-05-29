@@ -3,7 +3,9 @@ import Sorting from '../view/sorting';
 import RoutesList from '../view/routes-list';
 import RoutePresenter from './route-presenter';
 import {render} from '../framework/render';
-import {updateItems} from '../utils/common';
+import {updateItems, sortItems} from '../utils/common';
+import {SortingMethods} from '../utils/sorting';
+import {SortingDirectionVariants, SortingTypes} from '../constants';
 
 export default class AppPresenter {
   #appModel = null;
@@ -12,6 +14,8 @@ export default class AppPresenter {
   #routesListElement = new RoutesList();
   #routes = [];
   #routePresenters = new Map();
+  #activeSortingType = SortingTypes.DAY;
+  #activeSortingDirection = SortingDirectionVariants.DESC;
 
   constructor({appModel, mainElement, filtersElement}) {
     this.#appModel = appModel;
@@ -20,7 +24,7 @@ export default class AppPresenter {
   }
 
   init() {
-    this.#routes = this.#appModel.routes.slice();
+    this.#routes = sortItems(this.#appModel.routes, SortingMethods[this.#activeSortingType]?.(this.#activeSortingDirection));
 
     this.#renderContent();
   }
@@ -33,7 +37,10 @@ export default class AppPresenter {
 
   #renderSorting() {
     if (this.#mainElement) {
-      render(new Sorting(), this.#mainElement);
+      render(new Sorting({
+        onSortingChange: this.#sortingChangeHandler,
+        activeSortType: this.#activeSortingType
+      }), this.#mainElement);
     }
   }
 
@@ -83,4 +90,18 @@ export default class AppPresenter {
   };
 
   #modeChangeHandler = () => this.#routePresenters.forEach((presenter) => presenter.resetFormEditingView());
+
+  #sortingChangeHandler = (sortType) => {
+    const isSortingTypeMatches = this.#activeSortingType === sortType;
+    const sortingMethod = SortingMethods[sortType]?.();
+
+    if (isSortingTypeMatches || !sortingMethod) {
+      return;
+    }
+
+    this.#activeSortingType = SortingTypes[sortType.toUpperCase()];
+    this.#clearRoutes();
+    this.#routes = sortItems(this.#routes, sortingMethod);
+    this.#renderRoutes();
+  };
 }
