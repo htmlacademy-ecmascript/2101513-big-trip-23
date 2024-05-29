@@ -1,5 +1,5 @@
 import {FILTER_TYPES} from '../constants';
-import {getWordWithCapitalLetter} from '../utils/common';
+import {capitalizeLetter} from '../utils/common';
 import AbstractView from '../framework/view/abstract-view';
 
 const getFiltersItemTemplate = ({value, isChecked}) => `
@@ -11,7 +11,7 @@ const getFiltersItemTemplate = ({value, isChecked}) => `
              name="trip-filter"
              ${isChecked ? 'checked' : ''}
       >
-      <label class="trip-filters__filter-label" for="filter-${value}">${getWordWithCapitalLetter(value)}</label>
+      <label class="trip-filters__filter-label" for="filter-${value}">${capitalizeLetter(value)}</label>
     </div>
 `;
 

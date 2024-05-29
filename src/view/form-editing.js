@@ -74,7 +74,7 @@ export default class FormEditing extends AbstractView {
     this.#handleFormEditingSubmit = onFormEditingSubmit;
     this.#handleFormEditingClose = onFormEditingClose;
 
-    this.#handleEventListeners();
+    this.#addEventListenersHandler();
   }
 
   get template() {
@@ -92,7 +92,7 @@ export default class FormEditing extends AbstractView {
     this.#handleFormEditingClose();
   };
 
-  #handleEventListeners() {
+  #addEventListenersHandler() {
     const InteractiveElements = {
       EDIT_FORM: '.event--edit',
       EDIT_FORM_CLOSE_BUTTON: '.event__rollup-btn'
