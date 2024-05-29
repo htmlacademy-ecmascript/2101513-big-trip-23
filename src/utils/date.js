@@ -1,9 +1,7 @@
-import { ErrorMessages, TimeFormats, DurationFormats } from './constants';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
+import {DurationFormats, ErrorMessages, TimeFormats} from '../constants';
 dayjs.extend(duration);
-
-const getWordWithCapitalLetter = (word) => `${word.charAt(0).toUpperCase()}${word.slice(1)}`;
 
 const getHumanizedDate = (date, dateFormat) => {
   if (!date || !dateFormat) {
@@ -32,7 +30,6 @@ const getDurationGap = (dateFrom, dateTo) => {
 };
 
 export {
-  getWordWithCapitalLetter,
   getHumanizedDate,
   getDurationGap
 };

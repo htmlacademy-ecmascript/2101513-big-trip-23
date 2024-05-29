@@ -1,5 +1,5 @@
 import {FILTER_TYPES} from '../constants';
-import {getWordWithCapitalLetter} from '../utils';
+import {getWordWithCapitalLetter} from '../utils/common';
 import AbstractView from '../framework/view/abstract-view';
 
 const getFiltersItemTemplate = ({value, isChecked}) => `
