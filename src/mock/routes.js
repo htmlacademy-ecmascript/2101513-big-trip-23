@@ -15,8 +15,8 @@ const routes = [
   {
     id: '9973f9b5-6b91-4e56-ab2a-da9206114f8b',
     basePrice: 1677,
-    dateFrom: '2024-08-06T19:57:07.173Z',
-    dateTo: '2024-08-07T06:37:07.173Z',
+    dateFrom: '2023-08-06T19:57:07.173Z',
+    dateTo: '2023-08-07T06:37:07.173Z',
     destination: '20893efa-3ddc-46e6-b5aa-c6f88a3dabfa',
     isFavorite: true,
     offers: [
