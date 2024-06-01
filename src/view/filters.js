@@ -1,31 +1,37 @@
-import {FILTER_TYPES} from '../constants';
-import {capitalizeLetter} from '../utils/common';
 import AbstractView from '../framework/view/abstract-view';
 
-const getFiltersItemTemplate = ({value, isChecked}) => `
+const getFiltersItemTemplate = ({type, isActive}) => `
     <div class="trip-filters__filter">
-      <input id="filter-${value}"
+      <input id="filter-${type}"
              class="trip-filters__filter-input  visually-hidden"
-             value="${value}"
+             value="${type}"
              type="radio"
              name="trip-filter"
-             ${isChecked ? 'checked' : ''}
+             ${isActive ? '' : 'disabled'}
       >
-      <label class="trip-filters__filter-label" for="filter-${value}">${capitalizeLetter(value)}</label>
+      <label class="trip-filters__filter-label" for="filter-${type}">${type}</label>
     </div>
 `;
 
-const getFiltersTemplate = () => `
+const getFiltersTemplate = (filters) => `
   <form class="trip-filters" action="#" method="get">
 
-    ${FILTER_TYPES.map((type) => getFiltersItemTemplate(type)).join('')}
+    ${filters.map((filter) => getFiltersItemTemplate(filter)).join('')}
 
     <button class="visually-hidden" type="submit">Accept filter</button>
   </form>
 `;
 
 export default class Filters extends AbstractView {
+  #filters = [];
+
+  constructor({filters}) {
+    super();
+
+    this.#filters = filters;
+  }
+
   get template() {
-    return getFiltersTemplate();
+    return getFiltersTemplate(this.#filters);
   }
 }

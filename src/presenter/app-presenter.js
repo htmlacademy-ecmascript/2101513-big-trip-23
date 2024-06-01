@@ -2,10 +2,12 @@ import Filters from '../view/filters';
 import Sorting from '../view/sorting';
 import RoutesList from '../view/routes-list';
 import RoutePresenter from './route-presenter';
+import InfoMessage from '../view/info-message';
 import {render} from '../framework/render';
 import {updateItems, sortItems} from '../utils/common';
 import {SortingMethods} from '../utils/sorting';
-import {SortingDirectionVariants, SortingTypes} from '../constants';
+import {getFilters} from '../utils/filters';
+import {SortingDirectionVariants, SortingTypes, InfoMessages} from '../constants';
 
 export default class AppPresenter {
   #appModel = null;
@@ -31,7 +33,9 @@ export default class AppPresenter {
 
   #renderFilters() {
     if (this.#filtersElement) {
-      render(new Filters(), this.#filtersElement);
+      const filters = getFilters(this.#routes);
+
+      render(new Filters({filters}), this.#filtersElement);
     }
   }
 
@@ -54,6 +58,12 @@ export default class AppPresenter {
     }
   }
 
+  #renderInfoMessage(message) {
+    if (this.#mainElement) {
+      render(new InfoMessage({message}), this.#mainElement);
+    }
+  }
+
   #renderRoute(route) {
     if (route) {
       const {id} = route;
@@ -73,7 +83,12 @@ export default class AppPresenter {
     if (this.#mainElement) {
       this.#renderFilters();
       this.#renderSorting();
-      this.#renderRoutes();
+
+      if (this.#routes.length) {
+        this.#renderRoutes();
+      } else {
+        this.#renderInfoMessage(InfoMessages.NO_ROUTES);
+      }
     }
   }
 
