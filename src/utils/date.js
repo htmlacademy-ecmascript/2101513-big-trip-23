@@ -40,8 +40,17 @@ const getTimeDifference = (route) => {
   return dayjs(dateTo).diff(dateFrom);
 };
 
+const checkIsRouteFromTheFuture = ({dateFrom}) => dayjs().isBefore(dateFrom);
+
+const checkIsRouteFromThePast = ({dateTo}) => dayjs().isAfter(dateTo);
+
+const checkIsRouteFromThePresent = ({dateFrom, dateTo}) => dayjs().isAfter(dateFrom) && dayjs().isBefore(dateTo);
+
 export {
   getHumanizedDate,
   getDurationGap,
-  getTimeDifference
+  getTimeDifference,
+  checkIsRouteFromTheFuture,
+  checkIsRouteFromThePast,
+  checkIsRouteFromThePresent
 };
