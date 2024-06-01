@@ -1,19 +1,3 @@
-const FILTER_TYPES = [
-  {
-    value: 'everything',
-    isChecked: true
-  },
-  {
-    value: 'future'
-  },
-  {
-    value: 'present'
-  },
-  {
-    value: 'past'
-  }
-];
-
 const DISABLED_SORTING_TYPES = ['event', 'offers'];
 
 const EVENT_TYPES = ['taxi', 'bus', 'train', 'ship', 'flight', 'check-in', 'sightseeing', 'restaurant'];
@@ -26,6 +10,22 @@ const SortingTypes = {
   TIME: 'time',
   PRICE: 'price',
   OFFERS: 'offers'
+};
+
+const FilterTypes = {
+  EVERYTHING: 'EVERYTHING',
+  FUTURE: 'FUTURE',
+  PRESENT: 'PRESENT',
+  PAST: 'PAST'
+};
+
+const InfoMessages = {
+  NO_ROUTES: 'Click New Event to create your first point',
+  NO_PAST_ROUTES: 'There are no past events now',
+  NO_PRESENT_ROUTES: 'There are no present events now',
+  NO_FUTURE_ROUTES: 'There are no future events now',
+  FAILED_LOAD: 'Failed to load latest route information',
+  LOADING: 'Loading...'
 };
 
 const SortingDirectionVariants = {
@@ -65,11 +65,12 @@ const ModeVariants = {
 };
 
 export {
-  FILTER_TYPES,
   DISABLED_SORTING_TYPES,
   EVENT_TYPES,
   ESC_KEY_NAME,
   SortingTypes,
+  FilterTypes,
+  InfoMessages,
   SortingDirectionVariants,
   ErrorMessages,
   DateFormats,
