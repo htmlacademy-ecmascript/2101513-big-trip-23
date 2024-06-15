@@ -14,9 +14,25 @@ const sortItems = (items, cb) => {
   return [...items].sort(cb);
 };
 
+const getRouteDestinationById = (destinations, routeDestinationId) => destinations.find(({id: destinationId}) => destinationId === routeDestinationId);
+
+const getRouteDestinationByName = (destinations, routeDestinationName) => destinations.find(({name: destinationName}) => destinationName.toLowerCase() === routeDestinationName.toLowerCase());
+
+const getOffersByType = (type, offers) => offers.find(({type: offerType}) => offerType === type);
+
+const getRouteOffers = (route, offers) => {
+  const {type, offers: routeOffers} = route;
+  const {offers: offersByType} = getOffersByType(type, offers);
+  return offersByType.filter(({id}) => routeOffers.includes(id));
+};
+
 export {
   capitalizeLetter,
   updateItems,
   getSearchableValue,
-  sortItems
+  sortItems,
+  getRouteDestinationById,
+  getRouteDestinationByName,
+  getOffersByType,
+  getRouteOffers
 };
