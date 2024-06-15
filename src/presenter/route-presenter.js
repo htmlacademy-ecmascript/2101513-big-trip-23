@@ -29,17 +29,15 @@ export default class RoutePresenter {
     this.#route = route;
     this.#routeComponent = new RoutePoint({
       route: this.#route,
-      routeOffers: this.routeOffers,
-      routeDestination: this.routeDestination,
+      offers: this.offers,
+      destinations: this.destinations,
       onEditingFormOpen: this.#formEditingOpenHandler,
       onFavoriteClick: this.#favoriteClickHandler
     });
     this.#formEditingComponent = new FormEditing({
       route: this.#route,
+      offers: this.offers,
       destinations: this.destinations,
-      offersByType: this.offersByType,
-      routeOffers: this.routeOffers,
-      routeDestination: this.routeDestination,
       onFormEditingSubmit: this.#formEditingCloseHandler,
       onFormEditingClose: this.#formEditingCloseHandler
     });
@@ -73,22 +71,8 @@ export default class RoutePresenter {
     return [...this.#appModel.destinations];
   }
 
-  get offersByType() {
-    const {type} = this.#route;
-
-    return [...this.#appModel.getOffersByType(type)];
-  }
-
-  get routeOffers() {
-    const {type, offers} = this.#route;
-
-    return [...this.#appModel.getOffersForRoute(type, offers)];
-  }
-
-  get routeDestination() {
-    const {destination} = this.#route;
-
-    return this.#appModel.getDestinationForRoute(destination);
+  get offers() {
+    return [...this.#appModel.offers];
   }
 
   #replaceExistingComponent(containerElement, existingComponent, originalComponent) {
