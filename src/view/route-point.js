@@ -1,15 +1,17 @@
 import {getDurationGap, getHumanizedDate} from '../utils/date';
+import {getRouteDestinationById, getRouteOffers} from '../utils/common';
 import {DateFormats} from '../constants';
 import RoutePointOffers from './route-point-offers';
 import AbstractView from '../framework/view/abstract-view';
 
-const getRoutePointTemplate = (
+const getRoutePointTemplate = ({
   route,
   routeOffers,
   routeDestination
-) => {
+}) => {
   const {basePrice, dateFrom, dateTo, isFavorite, type} = route;
-  const {name} = routeDestination;
+  const {name: destinationName} = routeDestination;
+  const isRouteOffers = routeOffers && Boolean(routeOffers.length);
 
   return `
   <li class="trip-events__item">
@@ -18,7 +20,7 @@ const getRoutePointTemplate = (
       <div class="event__type">
         <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
       </div>
-      <h3 class="event__title">${type} ${name}</h3>
+      <h3 class="event__title">${type} ${destinationName}</h3>
       <div class="event__schedule">
         <p class="event__time">
           <time class="event__start-time" datetime="${dateFrom}">${getHumanizedDate(dateFrom, DateFormats.HM)}</time>
@@ -30,7 +32,7 @@ const getRoutePointTemplate = (
       <p class="event__price">
         &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
       </p>
-       ${new RoutePointOffers({routeOffers}).template}
+       ${isRouteOffers ? new RoutePointOffers({routeOffers}).template : ''}
       <button class="event__favorite-btn ${isFavorite ? 'event__favorite-btn--active' : ''}" type="button">
         <span class="visually-hidden">Add to favorite</span>
         <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
@@ -47,23 +49,23 @@ const getRoutePointTemplate = (
 
 export default class RoutePoint extends AbstractView {
   #route = {};
-  #routeOffers = [];
-  #routeDestination = '';
+  #offers = [];
+  #destinations = [];
   #handleEditingFormOpen = null;
   #handleFavoriteClick = null;
 
   constructor({
     route,
-    routeOffers,
-    routeDestination,
+    offers,
+    destinations,
     onEditingFormOpen,
     onFavoriteClick
   }) {
     super();
 
     this.#route = route;
-    this.#routeOffers = routeOffers;
-    this.#routeDestination = routeDestination;
+    this.#offers = offers;
+    this.#destinations = destinations;
     this.#handleEditingFormOpen = onEditingFormOpen;
     this.#handleFavoriteClick = onFavoriteClick;
 
@@ -71,7 +73,21 @@ export default class RoutePoint extends AbstractView {
   }
 
   get template() {
-    return getRoutePointTemplate(this.#route, this.#routeOffers, this.#routeDestination);
+    return getRoutePointTemplate({
+      route: this.#route,
+      routeOffers: this.routeOffers,
+      routeDestination: this.routeDestination
+    });
+  }
+
+  get routeDestination() {
+    const {destination: routeDestinationId} = this.#route;
+
+    return getRouteDestinationById(this.#destinations, routeDestinationId);
+  }
+
+  get routeOffers() {
+    return getRouteOffers(this.#route, this.#offers);
   }
 
   #formEditingOpenHandler = (evt) => {
