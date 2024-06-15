@@ -1,6 +1,6 @@
 const DISABLED_SORTING_TYPES = ['event', 'offers'];
 
-const EVENT_TYPES = ['taxi', 'bus', 'train', 'ship', 'flight', 'check-in', 'sightseeing', 'restaurant'];
+const EVENT_TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
 
 const ESC_KEY_NAME = 'Escape';
 

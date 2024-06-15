@@ -24,20 +24,4 @@ export default class AppModel {
   get offers() {
     return this.#offers;
   }
-
-  getOffersByType = (type) => {
-    const {offers} = this.offers.find(({type: offerType}) => offerType === type);
-
-    return offers;
-  };
-
-  getOffersForRoute = (type, routeOffers) => {
-    const offersByType = this.getOffersByType(type);
-
-    if (offersByType) {
-      return offersByType.filter(({id}) => routeOffers.includes(id));
-    }
-  };
-
-  getDestinationForRoute = (id) => this.destinations.find(({id: destinationId}) => destinationId === id);
 }
